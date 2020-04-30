@@ -1,4 +1,4 @@
-package com.example.fulloffeatures.ui.main;
+package com.example.fulloffeatures.adapters;
 
 import android.content.Context;
 
@@ -9,6 +9,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.fulloffeatures.R;
+import com.example.fulloffeatures.fragments.AlarmFragment;
+import com.example.fulloffeatures.fragments.ScreenLockerFragment;
+import com.example.fulloffeatures.fragments.ShakeItFragment;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
@@ -27,9 +30,14 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        // getItem is called to instantiate the fragment for the given page.
-        // Return a PlaceholderFragment (defined as a static inner class below).
-        return PlaceholderFragment.newInstance(position + 1);
+        switch (position) {
+            case 0:
+                return new ShakeItFragment();
+            case 1:
+                return new AlarmFragment();
+            default:
+                return new ScreenLockerFragment();
+        }
     }
 
     @Nullable
