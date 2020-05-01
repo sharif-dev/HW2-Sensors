@@ -1,11 +1,14 @@
 <resources>
     <string name="app_name">Full Of Features</string>
-    <string name="tab_text_1">shake it</string>
-    <string name="tab_text_2">alarm</string>
-    <string name="tab_text_3">screen locker</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="time_select">Select Time</string>
     <string name="alarm_reset">Reset Alarm</string>
+
+    <string-array name="tab_title">
+        <item>Alarm</item>
+        <item>Shake it</item>
+        <item>Screen locker</item>
+    </string-array>
 </resources>
