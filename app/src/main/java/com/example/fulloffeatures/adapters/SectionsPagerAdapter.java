@@ -32,9 +32,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new ShakeItFragment();
-            case 1:
                 return new AlarmFragment();
+            case 1:
+                return new ShakeItFragment();
             default:
                 return new ScreenLockerFragment();
         }

@@ -1,6 +1,8 @@
 package com.example.fulloffeatures.fragments;
 
+import android.app.Activity;
 import android.app.TimePickerDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,8 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.example.fulloffeatures.R;
+
+import java.util.Objects;
 
 
 /**
@@ -66,24 +70,56 @@ public class AlarmFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_alarm, container, false);
         Button setAlarmButton = view.findViewById(R.id.button_time_select);
+        Button resetAlarmButton = view.findViewById(R.id.button_alarm_reset);
         final TextView alarmTimeText = view.findViewById(R.id.text_alarm_time);
+        int hour = loadTime("HOUR");
+        int minute = loadTime("MINUTE");
+        if (hour == -1 && minute == -1) {
+            alarmTimeText.setText("");
+        } else {
+            alarmTimeText.setText(getAlarmText(hour, minute));
+        }
         setAlarmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogFragment timePicker = new TimePickerFragment(new TimePickerDialog.OnTimeSetListener() {
                     @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        alarmTimeText.setText(getAlarmText(hourOfDay, minute));
+                    public void onTimeSet(TimePicker view, int hour, int minute) {
+                        alarmTimeText.setText(getAlarmText(hour, minute));
+                        saveTime(hour, minute);
                     }
                 });
                 timePicker.show(getChildFragmentManager(), "timePicker");
 
             }
         });
+
+        resetAlarmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alarmTimeText.setText("");
+                saveTime(-1, -1);
+            }
+        });
+
         return view;
     }
 
     private String getAlarmText(int hour, int minute) {
         return String.format("Alarm: %02d:%02d", hour, minute);
     }
+
+    private void saveTime(int hour, int minute) {
+        SharedPreferences preference = Objects.requireNonNull(this.getActivity()).getPreferences(Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preference.edit();
+        editor.putInt("ALARM_HOUR", hour);
+        editor.putInt("ALARM_MINUTE", minute);
+        editor.apply();
+    }
+
+    private int loadTime(String key) {
+        SharedPreferences settings = Objects.requireNonNull(this.getActivity()).getPreferences(Activity.MODE_PRIVATE);
+        return settings.getInt("ALARM_" + key, -1);
+    }
+
 }
