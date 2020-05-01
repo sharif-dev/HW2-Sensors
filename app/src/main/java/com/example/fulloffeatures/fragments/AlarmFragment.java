@@ -36,6 +36,7 @@ public class AlarmFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     public static final int ALARM_REPEAT_TIME = 60;
+    public static final int ALARM_REPEAT_COUNT = 3;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -121,7 +122,7 @@ public class AlarmFragment extends Fragment {
     }
 
     private void saveTime(int hour, int minute) {
-        SharedPreferences preference = Objects.requireNonNull(this.getActivity()).getPreferences(Activity.MODE_PRIVATE);
+        SharedPreferences preference = Objects.requireNonNull(this.getActivity()).getSharedPreferences("alarm", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = preference.edit();
         editor.putInt("ALARM_HOUR", hour);
         editor.putInt("ALARM_MINUTE", minute);
@@ -129,7 +130,7 @@ public class AlarmFragment extends Fragment {
     }
 
     private int loadTime(String key) {
-        SharedPreferences settings = Objects.requireNonNull(this.getActivity()).getPreferences(Activity.MODE_PRIVATE);
+        SharedPreferences settings = Objects.requireNonNull(this.getActivity()).getSharedPreferences("alarm", Activity.MODE_PRIVATE);
         return settings.getInt("ALARM_" + key, -1);
     }
 
@@ -145,5 +146,13 @@ public class AlarmFragment extends Fragment {
         calendar.set(Calendar.SECOND, 0);
 
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000 * ALARM_REPEAT_TIME, alarmIntent);
+        resetAlarmRepeat();
+    }
+
+    public void resetAlarmRepeat() {
+        SharedPreferences preference = Objects.requireNonNull(this.getActivity()).getSharedPreferences("alarm", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preference.edit();
+        editor.putInt("ALARM_COUNT", ALARM_REPEAT_COUNT);
+        editor.apply();
     }
 }
