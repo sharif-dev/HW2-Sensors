@@ -1,7 +1,11 @@
 package com.example.fulloffeatures.fragments;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,8 +18,10 @@ import android.widget.TimePicker;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import com.example.fulloffeatures.AlarmReceiver;
 import com.example.fulloffeatures.R;
 
+import java.util.Calendar;
 import java.util.Objects;
 
 
@@ -29,10 +35,13 @@ public class AlarmFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    public static final int ALARM_REPEAT_TIME = 60;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private AlarmManager alarmManager;
+    private PendingIntent alarmIntent;
 
     public AlarmFragment() {
         // Required empty public constructor
@@ -87,6 +96,7 @@ public class AlarmFragment extends Fragment {
                     public void onTimeSet(TimePicker view, int hour, int minute) {
                         alarmTimeText.setText(getAlarmText(hour, minute));
                         saveTime(hour, minute);
+                        setAndroidAlarm(hour, minute);
                     }
                 });
                 timePicker.show(getChildFragmentManager(), "timePicker");
@@ -99,6 +109,7 @@ public class AlarmFragment extends Fragment {
             public void onClick(View v) {
                 alarmTimeText.setText("");
                 saveTime(-1, -1);
+                alarmManager.cancel(alarmIntent);
             }
         });
 
@@ -122,4 +133,17 @@ public class AlarmFragment extends Fragment {
         return settings.getInt("ALARM_" + key, -1);
     }
 
+    private void setAndroidAlarm(int hour, int minute) {
+        alarmManager = (AlarmManager) Objects.requireNonNull(getContext()).getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getContext(), AlarmReceiver.class);
+        alarmIntent = PendingIntent.getBroadcast(getContext(), 0, intent, 0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
+
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000 * ALARM_REPEAT_TIME, alarmIntent);
+    }
 }
