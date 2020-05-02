@@ -12,6 +12,8 @@
     <string name="shake_recognized">Shake Recognized!</string>
     <string name="sensitivity">sensitivity</string>
     <string name="shake_listen">Listening on shakes...</string>
+    <string name="running">running</string>
+    <string name="default_pref">default</string>
 
     <string-array name="tab_title">
         <item>Alarm</item>
