@@ -4,30 +4,41 @@ import android.app.IntentService;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.IBinder;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
-public class ShakeService extends IntentService {
+import com.example.fulloffeatures.sensors.ShakeSensor;
 
-    /**
-     * Creates an IntentService.  Invoked by your subclass's constructor.
-     *
-     */
-    public ShakeService() {
-        super("Shake Service");
+public class ShakeService extends Service {
+
+    ShakeSensor sensor;
+
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        sensor = new ShakeSensor(this);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        sensor.startListening();
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
-        SensorManager sensorManager;
-        Sensor sensor;
-
-        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+    public void onDestroy() {
+        super.onDestroy();
+        sensor.stopListening();
     }
 
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
 }
