@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.example.fulloffeatures.R;
 import com.example.fulloffeatures.services.ShakeService;
@@ -27,10 +28,13 @@ public class ShakeItFragment extends Fragment {
     private final String TAG = "shake fragment";
     private ShakeService shakeService = null;
     private Activity activity;
+    private int sensitivity = 50;
 
-
+    private TextView percentTv;
     private SeekBar seekBar;
     private Button mShakeButton;
+
+    private Intent intent;
 
     public ShakeItFragment() {
         // Required empty public constructor
@@ -55,6 +59,35 @@ public class ShakeItFragment extends Fragment {
         mShakeButton = view.findViewById(R.id.shake_it_fragment_shake_button);
         shakeService = new ShakeService();
         activity = getActivity();
+        seekBar = view.findViewById(R.id.shake_it_fragment_seek_bar);
+        percentTv = view.findViewById(R.id.shake_it_fragment_percent_tv);
+
+        intent = new Intent(activity, ShakeService.class);
+
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                percentTv.setText(String.valueOf(progress));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                sensitivity = seekBar.getProgress();
+                if (serviceRunning) {
+                    activity.stopService(intent);
+                    Log.d(TAG, "rerunning shake service ");
+                    intent = new Intent(activity, ShakeService.class);
+                    intent.putExtra(getString(R.string.sensitivity), sensitivity);
+                    activity.startService(intent);
+                }
+            }
+        });
 
         mShakeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,12 +95,14 @@ public class ShakeItFragment extends Fragment {
                 if (!serviceRunning) {
                     Log.d(TAG, "shake service started ");
                     mShakeButton.setText(R.string.stop_shake);
-                    activity.startService(new Intent(activity, ShakeService.class));
+                    intent = new Intent(activity, ShakeService.class);
+                    intent.putExtra(getString(R.string.sensitivity), sensitivity);
+                    activity.startService(intent);
                     serviceRunning = true;
                 } else {
                     Log.d(TAG, "shake service turned off");
                     mShakeButton.setText(R.string.start_shake);
-                    activity.stopService(new Intent(activity, ShakeService.class));
+                    activity.stopService(intent);
                     serviceRunning = false;
                 }
             }

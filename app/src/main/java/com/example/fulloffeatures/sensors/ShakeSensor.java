@@ -13,6 +13,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
+import android.os.PowerManager;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
@@ -34,7 +35,7 @@ public class ShakeSensor implements SensorEventListener {
     private final Sensor acceleratorSensor;
     Context context;
     private long lastUpdate;
-    private static  int SHAKE_THRESHOLD = 20;
+    private static  int SHAKE_THRESHOLD = 25;
     private  Vibrator vibrator;
 
     private final int NOTIFICATION_ID = 121382;
@@ -68,9 +69,24 @@ public class ShakeSensor implements SensorEventListener {
                 } else {
                     vibrator.vibrate(500);
                 }
+                poweron();
                 notif();
             }
         }
+    }
+
+
+    private void poweron() {
+        PowerManager powerManager = (PowerManager) context.getSystemService(context.POWER_SERVICE);
+        PowerManager.WakeLock  wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK |
+                PowerManager.ACQUIRE_CAUSES_WAKEUP |
+                PowerManager.ON_AFTER_RELEASE, "appname::WakeLock");
+
+        //acquire will turn on the display
+        wakeLock.acquire();
+
+        //release will release the lock from CPU, in case of that, screen will go back to sleep mode in defined time bt device settings
+        wakeLock.release();
     }
 
     private void notif() {
@@ -105,5 +121,13 @@ public class ShakeSensor implements SensorEventListener {
 
     public void startListening() {
         sensorManager.registerListener(this, acceleratorSensor,  SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    public void setSensitivity(int sensitivity) {
+        SHAKE_THRESHOLD = convert(sensitivity);
+    }
+
+    private int convert(int percent) {
+        return 35 - percent/5;
     }
 }

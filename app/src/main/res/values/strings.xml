@@ -10,6 +10,8 @@
     <string name="channel_name">Vibration</string>
     <string name="channel_description">channel to show shaking detection.</string>
     <string name="shake_recognized">Shake Recognized!</string>
+    <string name="sensitivity">sensitivity</string>
+    <string name="shake_listen">Listening on shakes...</string>
 
     <string-array name="tab_title">
         <item>Alarm</item>
