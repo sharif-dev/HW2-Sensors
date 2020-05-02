@@ -7,8 +7,11 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.fulloffeatures.R;
+import com.example.fulloffeatures.sensors.ShakeSensor;
+import com.example.fulloffeatures.services.ShakeService;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,6 +27,12 @@ public class ShakeItFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private ShakeService shakeService;
+    private ShakeSensor shakeSensor;
+
+
+    private Button mShakeButton;
 
     public ShakeItFragment() {
         // Required empty public constructor
@@ -54,6 +63,8 @@ public class ShakeItFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        mShakeButton = getActivity().findViewById(R.id.shake_it_fragment_shake_button);
+
     }
 
     @Override
