@@ -27,6 +27,8 @@ import com.example.fulloffeatures.MainActivity;
 import com.example.fulloffeatures.R;
 import com.example.fulloffeatures.fragments.ShakeItFragment;
 
+import java.text.DecimalFormat;
+
 import static android.content.Context.SENSOR_SERVICE;
 
 public class ShakeSensor implements SensorEventListener {
@@ -38,7 +40,6 @@ public class ShakeSensor implements SensorEventListener {
     private static  int SHAKE_THRESHOLD = 25;
     private  Vibrator vibrator;
 
-    private final int NOTIFICATION_ID = 121382;
 
 
     public ShakeSensor(Context context) {
@@ -63,14 +64,16 @@ public class ShakeSensor implements SensorEventListener {
             double acceleration = Math.sqrt(x+y+z);
 
             if (acceleration > SHAKE_THRESHOLD) {
-                Log.d("sensor", "shake detected acceleration: " + acceleration + " m/s^2");
+                String report = "acceleration: " + (new DecimalFormat("##.##").format(acceleration)) + " m/s^2";
+                Log.d("sensor", report);
+                Toast.makeText(context, report, Toast.LENGTH_SHORT).show();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     vibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
                 } else {
                     vibrator.vibrate(500);
                 }
                 poweron();
-                notif();
+
             }
         }
     }
@@ -82,31 +85,11 @@ public class ShakeSensor implements SensorEventListener {
                 PowerManager.ACQUIRE_CAUSES_WAKEUP |
                 PowerManager.ON_AFTER_RELEASE, "appname::WakeLock");
 
-        //acquire will turn on the display
         wakeLock.acquire();
 
-        //release will release the lock from CPU, in case of that, screen will go back to sleep mode in defined time bt device settings
         wakeLock.release();
     }
 
-    private void notif() {
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
-        mBuilder.setSmallIcon(R.drawable.ic_launcher_foreground);
-        mBuilder.setContentTitle("Notification Alert, Click Me!");
-        mBuilder.setContentText("Hi, This is Android Notification Detail!");
-
-        Intent resultIntent = new Intent(context, MainActivity.class);
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-        stackBuilder.addParentStack(MainActivity.class);
-
-
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentIntent(resultPendingIntent);
-
-        NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
-    }
 
 
     @Override
