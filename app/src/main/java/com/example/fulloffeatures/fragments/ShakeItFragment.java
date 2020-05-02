@@ -63,14 +63,27 @@ public class ShakeItFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        mShakeButton = getActivity().findViewById(R.id.shake_it_fragment_shake_button);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_shake_it, container, false);
+        View view = inflater.inflate(R.layout.fragment_shake_it, container, false);
+        mShakeButton = view.findViewById(R.id.shake_it_fragment_shake_button);
+
+        mShakeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shakeSensor = new ShakeSensor(getContext());
+            }
+        });
+
+        return view;
     }
+
+
+
+
+
+
 }
