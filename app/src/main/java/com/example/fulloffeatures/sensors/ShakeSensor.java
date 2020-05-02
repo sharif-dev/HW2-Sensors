@@ -1,6 +1,13 @@
 package com.example.fulloffeatures.sensors;
 
+import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -12,6 +19,12 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
+import com.example.fulloffeatures.MainActivity;
+import com.example.fulloffeatures.R;
+import com.example.fulloffeatures.fragments.ShakeItFragment;
 
 import static android.content.Context.SENSOR_SERVICE;
 
@@ -24,6 +37,7 @@ public class ShakeSensor implements SensorEventListener {
     private static  int SHAKE_THRESHOLD = 20;
     private  Vibrator vibrator;
 
+    private final int NOTIFICATION_ID = 121382;
 
 
     public ShakeSensor(Context context) {
@@ -54,9 +68,30 @@ public class ShakeSensor implements SensorEventListener {
                 } else {
                     vibrator.vibrate(500);
                 }
+                notif();
             }
         }
     }
+
+    private void notif() {
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
+        mBuilder.setSmallIcon(R.drawable.ic_launcher_foreground);
+        mBuilder.setContentTitle("Notification Alert, Click Me!");
+        mBuilder.setContentText("Hi, This is Android Notification Detail!");
+
+        Intent resultIntent = new Intent(context, MainActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        stackBuilder.addParentStack(MainActivity.class);
+
+
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(resultPendingIntent);
+
+        NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+    }
+
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {

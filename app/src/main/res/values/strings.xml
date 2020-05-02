@@ -7,6 +7,9 @@
     <string name="alarm_reset">Reset Alarm</string>
     <string name="start_shake">Start Shake Listener</string>
     <string name="stop_shake">Stop Shake Listener</string>
+    <string name="channel_name">Vibration</string>
+    <string name="channel_description">channel to show shaking detection.</string>
+    <string name="shake_recognized">Shake Recognized!</string>
 
     <string-array name="tab_title">
         <item>Alarm</item>
