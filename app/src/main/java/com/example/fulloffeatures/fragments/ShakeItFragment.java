@@ -148,7 +148,7 @@ public class ShakeItFragment extends Fragment {
     private boolean sensorsIsAvailable() {
         SensorManager sensorManager = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
         assert sensorManager != null;
-        Sensor acceleratorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        Sensor acceleratorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         if (acceleratorSensor == null) {
             return false;
         }
