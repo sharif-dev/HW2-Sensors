@@ -40,7 +40,7 @@ public class TurnService extends Service {
                 0, notificationIntent, 0);
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Foreground Service")
-                .setContentText(getString(R.string.shake_listen))
+                .setContentText(getString(R.string.turn_listen))
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentIntent(pendingIntent)
                 .build();
@@ -48,7 +48,6 @@ public class TurnService extends Service {
         //do heavy work on a background thread
         //stopSelf();
 
-        sensor.setSensitivity((int) intent.getExtras().get(getString(R.string.sensitivity)));
         sensor.startListening();
 
         return START_NOT_STICKY;

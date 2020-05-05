@@ -17,6 +17,7 @@
     <string name="hardware_compatibility_error">Your device does not have required hardware</string>
     <string name="not_set_alarm">You have not set any alarm yet</string>
     <string name="stop_screen_locker_service">Stop Screan Locker Service</string>
+    <string name="turn_listen">Listening to turn ...</string>
 
     <string-array name="tab_title">
         <item>Alarm</item>
