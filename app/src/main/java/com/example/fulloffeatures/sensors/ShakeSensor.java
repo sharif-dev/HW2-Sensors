@@ -45,7 +45,7 @@ public class ShakeSensor implements SensorEventListener {
     public ShakeSensor(Context context) {
         this.context = context;
         sensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
-        acceleratorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        acceleratorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         this.vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
     }
 
