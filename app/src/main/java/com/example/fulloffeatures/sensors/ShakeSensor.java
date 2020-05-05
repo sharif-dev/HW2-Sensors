@@ -73,7 +73,6 @@ public class ShakeSensor implements SensorEventListener {
                     vibrator.vibrate(500);
                 }
                 poweron();
-
             }
         }
     }

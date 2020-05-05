@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.fulloffeatures.AlarmReceiver;
 import com.example.fulloffeatures.R;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Calendar;
 import java.util.Objects;
@@ -108,9 +109,16 @@ public class AlarmFragment extends Fragment {
         resetAlarmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                alarmTimeText.setText("");
-                saveTime(-1, -1);
-                alarmManager.cancel(alarmIntent);
+                if (alarmIntent != null || alarmManager != null) {
+                    alarmTimeText.setText("");
+                    saveTime(-1, -1);
+                    alarmManager.cancel(alarmIntent);
+                } else {
+                    Snackbar.make(
+                            v,
+                            getString(R.string.not_set_alarm),
+                            Snackbar.LENGTH_LONG).show();
+                }
             }
         });
 
