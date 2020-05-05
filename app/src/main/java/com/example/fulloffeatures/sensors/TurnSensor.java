@@ -6,11 +6,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.PowerManager;
-import android.util.Log;
 import android.widget.Toast;
 
-import java.text.DecimalFormat;
 
 import static android.content.Context.SENSOR_SERVICE;
 
@@ -36,7 +33,6 @@ public class TurnSensor implements SensorEventListener {
         if ((curTime - lastUpdate) > 100) {
             lastUpdate = curTime;
             float[] values = event.values;
-            double x = values[SensorManager.DATA_X];
             double y = values[SensorManager.DATA_Y];
             double z = values[SensorManager.DATA_Z];
 
@@ -45,19 +41,6 @@ public class TurnSensor implements SensorEventListener {
             }
         }
     }
-
-
-    private void poweron() {
-        PowerManager powerManager = (PowerManager) context.getSystemService(context.POWER_SERVICE);
-        PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK |
-                PowerManager.ACQUIRE_CAUSES_WAKEUP |
-                PowerManager.ON_AFTER_RELEASE, "appname::WakeLock");
-
-        wakeLock.acquire();
-
-        wakeLock.release();
-    }
-
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
