@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 
 import com.example.fulloffeatures.R;
 import com.example.fulloffeatures.services.ShakeService;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.prefs.Preferences;
 
@@ -43,7 +46,8 @@ public class ShakeItFragment extends Fragment {
     private SharedPreferences.Editor editor;
 
 
-    public ShakeItFragment() { }
+    public ShakeItFragment() {
+    }
 
     public static ShakeItFragment newInstance() {
         ShakeItFragment fragment = new ShakeItFragment();
@@ -106,6 +110,13 @@ public class ShakeItFragment extends Fragment {
         mShakeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!sensorsIsAvailable()) {
+                    Snackbar.make(
+                            v,
+                            getString(R.string.hardware_compatibility_error),
+                            Snackbar.LENGTH_LONG).show();
+                    return;
+                }
                 if (!serviceRunning) {
                     Log.d(TAG, "shake service started ");
                     mShakeButton.setText(R.string.stop_shake);
@@ -132,5 +143,15 @@ public class ShakeItFragment extends Fragment {
         super.onStop();
         super.onDestroy();
         editor.commit();
+    }
+
+    private boolean sensorsIsAvailable() {
+        SensorManager sensorManager = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
+        assert sensorManager != null;
+        Sensor acceleratorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        if (acceleratorSensor == null) {
+            return false;
+        }
+        return true;
     }
 }
