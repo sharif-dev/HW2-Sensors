@@ -57,15 +57,15 @@ public class ScreenLockerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_shake_it, container, false);
-        mShakeButton = view.findViewById(R.id.shake_it_fragment_shake_button);
+        View view = inflater.inflate(R.layout.fragment_screen_locker, container, false);
+        mShakeButton = view.findViewById(R.id.screen_locker_fragment_start_button);
         activity = getActivity();
         preferences = getContext()
                 .getSharedPreferences(getString(R.string.default_pref), Context.MODE_PRIVATE);
         editor = preferences.edit();
         serviceRunning = preferences.getBoolean(getString(R.string.running), false);
         if (serviceRunning) {
-            mShakeButton.setText(getString(R.string.stop_shake));
+            mShakeButton.setText(getString(R.string.stop_screen_locker_service));
         }
         intent = new Intent(activity, ShakeService.class);
 
