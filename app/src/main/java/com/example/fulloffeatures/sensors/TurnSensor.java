@@ -17,7 +17,7 @@ public class TurnSensor implements SensorEventListener {
     private final Sensor acceleratorSensor;
     Context context;
     private long lastUpdate;
-    private static int TOLERANCE = 25;
+    private static int TOLERANCE = 4;
 
     public TurnSensor(Context context) {
         this.context = context;
